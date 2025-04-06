@@ -23,7 +23,6 @@ const HomePage = () => {
     fetchFeaturedProducts();
   }, [fetchFeaturedProducts]);
 
-  // Ensure products is always an array
   const safeProducts = Array.isArray(products) ? products : [];
 
   return (
@@ -31,7 +30,7 @@ const HomePage = () => {
       <div >
         <Carousel />
       </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-center text-5xl sm:text-6xl font-bold text-emerald-400 mb-4">
           Explore Our Categories
         </h1>
