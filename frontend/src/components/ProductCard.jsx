@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
         <h5 className="text-xl font-semibold tracking-tight text-white ">
           {product.name}
         </h5>
-        <h5 className="text-md tracking-tight text-gray-400">
+        <h5 className="text-md tracking-tight text-gray-400 line-clamp-2">
           {product.description}
         </h5>
         <div className="mt-2 mb-5 flex items-center justify-between">

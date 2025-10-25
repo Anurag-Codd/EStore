@@ -17,7 +17,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-900 bg-opacity-90 backdrop-blur-md shadow-lg z-40 transition-all duration-300 border-b border-emerald-800">
-      <div className="px-4 md:px-6 lg:px-8 py-3">
+      <div className="px-6 py-3 max-w-7xl mx-auto">
         <div className="flex flex-wrap justify-between items-center">
           <Link
             to="/"
@@ -26,7 +26,7 @@ const Navbar = () => {
             E-Commerce
           </Link>
 
-          <nav className="flex flex-wrap items-center gap-4">
+          <nav className="hidden sm:flex flex-wrap items-center gap-4">
             <Link
               to="/"
               className="text-gray-300 hover:text-emerald-400 transition duration-300 ease-in-out flex items-center"

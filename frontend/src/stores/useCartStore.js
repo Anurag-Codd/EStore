@@ -5,7 +5,6 @@ import axios from "axios";
 export const useCartStore = create((set, get) => ({
   cart: [],
   total: 0,
-  subtotal: 0,
 
   getCartItems: async () => {
     try {
@@ -19,7 +18,7 @@ export const useCartStore = create((set, get) => ({
   },
 
   clearCart: () => {
-    set({ cart: [], coupon: null, total: 0, subtotal: 0 });
+    set({ cart: [], total: 0 });
   },
 
   addToCart: async (product) => {

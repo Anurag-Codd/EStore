@@ -72,7 +72,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
 
   return (
     <div className="my-12">
-      <div className="container mx-auto px-4">
+      <div className="w-full mx-auto">
         <h2 className="text-center text-5xl sm:text-6xl font-bold text-emerald-400 mb-4">
           Featured
         </h2>
@@ -80,10 +80,10 @@ const FeaturedProducts = ({ featuredProducts }) => {
           <button
             onClick={prevSlide}
             disabled={isStartDisabled}
-            className={`absolute top-1/2 -left-10 transform -translate-y-1/2 p-1 rounded-xl transition-colors duration-300 h-12 ${
+            className={`absolute top-1/2 -left-10 transform -translate-y-1/2 h-12 ${
               isStartDisabled
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-emerald-600 hover:bg-emerald-500"
+                ? " cursor-not-allowed"
+                : ""
             }`}
           >
             <ChevronLeft size={24} />
@@ -98,12 +98,11 @@ const FeaturedProducts = ({ featuredProducts }) => {
               exit="exit"
               className="absolute top-0 left-0 w-full flex"
             >
-              {featuredProducts
-                .slice(currentIndex, currentIndex + itemsPerPage)
+              {featuredProducts?.slice(currentIndex, currentIndex + itemsPerPage)
                 .map((product) => (
                   <div
                     key={product._id}
-                    className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0 px-2"
+                    className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 shrink-0 px-2"
                   >
                     <ProductCard product={product} />
                   </div>
@@ -113,10 +112,10 @@ const FeaturedProducts = ({ featuredProducts }) => {
           <button
             onClick={nextSlide}
             disabled={isEndDisabled}
-            className={`absolute top-1/2 -right-10 transform -translate-y-1/2 p-1 rounded-xl transition-colors duration-300 h-12 ${
+            className={`absolute top-1/2 -right-10 transform -translate-y-1/2 h-12 ${
               isEndDisabled
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-emerald-600 hover:bg-emerald-500"
+                ? "cursor-not-allowed"
+                : ""
             }`}
           >
             <ChevronRight size={24} />
