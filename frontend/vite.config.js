@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://api.estore.tinfoxconsulting.com",
+        target: "http://localhost:4040",
         changeOrigin: true,
       },
     },
