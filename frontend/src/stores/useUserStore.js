@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export const useUserStore = create((set, get) => ({
   user: null,
@@ -16,7 +16,7 @@ export const useUserStore = create((set, get) => ({
     }
 
     try {
-      const res = await axios.post("/api/auth/signup", {
+      const res = await axiosInstance.post("/api/auth/signup", {
         name,
         email,
         password,
@@ -31,7 +31,7 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true });
 
     try {
-      const res = await axios.post("/api/auth/login", { email, password });
+      const res = await axiosInstance.post("/api/auth/login", { email, password });
 
       set({ user: res.data, loading: false });
     } catch (error) {
@@ -42,7 +42,7 @@ export const useUserStore = create((set, get) => ({
 
   logout: async () => {
     try {
-      await axios.post("/api/auth/logout");
+      await axiosInstance.post("/api/auth/logout");
       set({ user: null });
       toast.success("You have been logged out.");
     } catch (error) {
@@ -55,7 +55,7 @@ export const useUserStore = create((set, get) => ({
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
-      const response = await axios.get("/api/auth/profile");
+      const response = await axiosInstance.get("/api/auth/profile");
       set({ user: response.data, checkingAuth: false });
     } catch (error) {
       console.log(error.message);
@@ -68,7 +68,7 @@ export const useUserStore = create((set, get) => ({
 
     set({ checkingAuth: true });
     try {
-      const response = await axios.post("/api/auth/refresh-token");
+      const response = await axiosInstance.post("/api/auth/refresh-token");
       set({ checkingAuth: false });
       return response.data;
     } catch (error) {
@@ -83,7 +83,7 @@ export const useUserStore = create((set, get) => ({
 let refreshPromise = null;
 let retryCount = 0;
 
-axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -105,7 +105,7 @@ axios.interceptors.response.use(
         refreshPromise = null;
         retryCount = 0;
 
-        return axios(originalRequest);
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
         retryCount = 0;
         useUserStore.getState().logout();

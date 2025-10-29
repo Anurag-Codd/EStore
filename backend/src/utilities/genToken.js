@@ -12,14 +12,7 @@ export const handleTokens = async (res, userId) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: secureFlag,
-    sameSite: "strict",
+    sameSite: 'None',
     maxAge: 15 * 60 * 1000,
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: secureFlag,
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };

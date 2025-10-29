@@ -1,41 +1,88 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { redis } from "../utilities/redis.js";
 
 export const protectRoute = async (req, res, next) => {
-	try {
-		const accessToken = req.cookies.accessToken;
+  try {
+    const accessToken = req.cookies.accessToken;
 
-		if (!accessToken) {
-			return res.status(401).json({ message: "Unauthorized - No access token provided" });
-		}
+    if (!accessToken) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized - No access token provided" });
+    }
 
-		try {
-			const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-			const user = await User.findById(decoded.userId).select("-password");
+    try {
+      let decodedAccess;
+      try {
+        decodedAccess = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+         const decoded = jwt.decode(accessToken);
+          if (!decoded?.userId) {
+            return res.status(403).json({ message: "Invalid token structure" });
+          }
 
-			if (!user) {
-				return res.status(401).json({ message: "User not found" });
-			}
+          const refreshToken = await redis.get(
+            `refresh_token:${decoded.userId}`
+          );
+          if (!refreshToken) {
+            return res
+              .status(403)
+              .json({ message: "Session expired - please log in again" });
+          }
 
-			req.user = user;
+          const verified = jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+          );
 
-			next();
-		} catch (error) {
-			if (error.name === "TokenExpiredError") {
-				return res.status(401).json({ message: "Unauthorized - Access token expired" });
-			}
-			throw error;
-		}
-	} catch (error) {
-		console.log("Error in protectRoute middleware", error.message);
-		return res.status(401).json({ message: "Unauthorized - Invalid access token" });
-	}
+          const newAccessToken = jwt.sign(
+            { userId: verified.userId },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "15m" }
+          );
+
+          res.cookie("accessToken", newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
+            maxAge: 15 * 60 * 1000,
+          });
+
+          decodedAccess = verified;
+        } else {
+          throw error;
+        }
+      }
+
+      const user = await User.findById(refreshDecoded.userId).select(
+        "-password"
+      );
+
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+      req.user = user;
+
+      next();
+    } catch (error) {
+      console.error("protectRoute error:", error);
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (error) {
+    console.log("Error in protectRoute middleware", error.message);
+    return res
+      .status(401)
+      .json({ message: "Unauthorized - Invalid access token" });
+  }
 };
 
 export const adminRoute = (req, res, next) => {
-	if (req.user && req.user.role === "admin") {
-		next();
-	} else {
-		return res.status(403).json({ message: "Access denied - Admin only" });
-	}
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ message: "Access denied - Admin only" });
+  }
 };

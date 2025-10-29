@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export const useCartStore = create((set, get) => ({
   cart: [],
@@ -8,7 +8,7 @@ export const useCartStore = create((set, get) => ({
 
   getCartItems: async () => {
     try {
-      const response = await axios.get("/api/cart");
+      const response = await axiosInstance.get("/api/cart");
       set({ cart: response.data });
       get().calculateTotals();
     } catch (error) {
@@ -23,7 +23,7 @@ export const useCartStore = create((set, get) => ({
 
   addToCart: async (product) => {
     try {
-      await axios.post("/api/cart", { productId: product._id });
+      await axiosInstance.post("/api/cart", { productId: product._id });
       toast.success("Product added to cart");
 
       set((state) => {
@@ -47,7 +47,7 @@ export const useCartStore = create((set, get) => ({
 
   removeFromCart: async (productId) => {
     try {
-      await axios.delete(`/api/cart`, { data: { productId } });
+      await axiosInstance.delete(`/api/cart`, { data: { productId } });
       set((state) => ({
         cart: state.cart.filter((item) => item._id !== productId),
       }));
@@ -64,7 +64,7 @@ export const useCartStore = create((set, get) => ({
         return;
       }
 
-      await axios.put(`/api/cart/${productId}`, { quantity });
+      await axiosInstance.put(`/api/cart/${productId}`, { quantity });
       set((state) => ({
         cart: state.cart.map((item) =>
           item._id === productId ? { ...item, quantity } : item
