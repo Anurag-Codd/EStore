@@ -55,11 +55,16 @@ export const logout = async (req, res) => {
     const { accessToken } = req.cookies;
 
     if (accessToken) {
-      const decoded = jwt.decode(accessToken, process.env.ACCESS_TOKEN_SECRET);
+      const decoded = jwt.decode(accessToken);
       await redis.del(`refresh_token:${decoded.userId}`);
     }
 
-    res.clearCookie("accessToken");
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
+      path: "/",
+    });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     console.error("Error in logout controller", error.message);

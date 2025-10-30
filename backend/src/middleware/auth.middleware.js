@@ -15,10 +15,13 @@ export const protectRoute = async (req, res, next) => {
     try {
       let decodedAccess;
       try {
-        decodedAccess = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+        decodedAccess = jwt.verify(
+          accessToken,
+          process.env.ACCESS_TOKEN_SECRET
+        );
       } catch (error) {
         if (error.name === "TokenExpiredError") {
-         const decoded = jwt.decode(accessToken);
+          const decoded = jwt.decode(accessToken);
           if (!decoded?.userId) {
             return res.status(403).json({ message: "Invalid token structure" });
           }
@@ -47,6 +50,7 @@ export const protectRoute = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "None",
+            path: "/",
             maxAge: 18 * 60 * 1000,
           });
 
