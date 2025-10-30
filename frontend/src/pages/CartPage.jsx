@@ -6,7 +6,6 @@ import { ShoppingCart, ClipboardList } from "lucide-react";
 import CartItem from "../components/CartItem";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
 import OrderSummary from "../components/OrderSummary";
-// import GiftCouponCard from "../components/GiftCouponCard";
 import OrderList from "../components/OrderList";
 
 const CartPage = () => {
@@ -19,7 +18,7 @@ const CartPage = () => {
 
   return (
     <div className="py-8 md:py-16">
-      <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+      <div className="mx-auto max-w-7xl px-4 2xl:px-0">
         <div className="flex justify-center space-x-8 mb-6">
           <button
             className={`px-4 py-2 font-semibold transition-colors ${activeTab === 'cart' ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-500'}`}
@@ -86,7 +85,7 @@ const OrderView = () => (
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
-    <OrderList /> {/* This component should list all customer orders */}
+    <OrderList />
   </motion.div>
 );
 

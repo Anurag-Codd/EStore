@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import toast from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const PeopleAlsoBought = () => {
   const [recommendations, setRecommendations] = useState([]);
@@ -11,7 +11,7 @@ const PeopleAlsoBought = () => {
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const res = await axios.get("/api/products/recommendations"); // Ensure correct API endpoint
+        const res = await axiosInstance.get("/api/products/recommendations"); // Ensure correct API endpoint
         if (Array.isArray(res.data)) {
           setRecommendations(res.data);
         } else {

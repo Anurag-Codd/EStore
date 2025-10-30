@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
+import axiosInstance from "../utils/axiosInstance";
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -11,7 +11,7 @@ const OrderList = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("/api/orders");
+        const res = await axiosInstance.get("/api/orders");
         setOrders(res.data);
       } catch (error) {
         toast.error(
@@ -29,11 +29,11 @@ const OrderList = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="space-y-6">
-      {orders.length === 0 ? (
+    <div className="py-16">
+      {orders?.length === 0 ? (
         <p className="text-center text-gray-400">You have no orders.</p>
       ) : (
-        orders.map((order) => (
+        orders?.map((order) => (
           <motion.div
             key={order._id}
             className="p-10 rounded-md relative flex bg-black/40 shadow-md h-44"
@@ -41,8 +41,8 @@ const OrderList = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="flex-shrink-0 relative w-24 h-24">
-              {order.products.slice(0, 3).map((product, index) => (
+            <div className="shrink-0 relative w-24 h-24">
+              {order?.products.slice(0, 3).map((product, index) => (
                 <div
                   key={index}
                   className={`absolute w-16 h-16 rounded-md border-2 border-white overflow-hidden transform rotate-${

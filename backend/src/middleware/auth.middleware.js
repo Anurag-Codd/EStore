@@ -47,7 +47,7 @@ export const protectRoute = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "None",
-            maxAge: 15 * 60 * 1000,
+            maxAge: 18 * 60 * 1000,
           });
 
           decodedAccess = verified;
@@ -56,7 +56,7 @@ export const protectRoute = async (req, res, next) => {
         }
       }
 
-      const user = await User.findById(refreshDecoded.userId).select(
+      const user = await User.findById(decodedAccess.userId).select(
         "-password"
       );
 

@@ -13,6 +13,6 @@ export const handleTokens = async (res, userId) => {
     httpOnly: true,
     secure: secureFlag,
     sameSite: 'None',
-    maxAge: 15 * 60 * 1000,
+    maxAge: 18 * 60 * 1000,
   });
 };

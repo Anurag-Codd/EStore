@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Users, Package, ShoppingCart, DollarSign } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const AnalyticsTab = () => {
   const [analyticsData, setAnalyticsData] = useState({
@@ -17,8 +17,8 @@ const AnalyticsTab = () => {
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
-        const response = await axios.get("/analytics");
-        const data = response.data || {}; // Ensure response data is defined
+        const response = await axiosInstance.get("/analytics");
+        const data = response.data || {};
         setAnalyticsData({
           users: data.analyticsData?.users || 0,
           products: data.analyticsData?.products || 0,
